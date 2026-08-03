@@ -25,6 +25,7 @@ DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_NAME = os.getenv("DB_NAME", "weather_db")
 DB_USER = os.getenv("DB_USER", "postgres")
 DB_PASS = os.getenv("DB_PASS", "postgres")
+DB_SSLMODE = os.getenv("DB_SSLMODE", "require")
 OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY", "")
 
 # Redis Connection
@@ -32,7 +33,11 @@ cache = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0, decode_responses=Tru
 
 def get_db_connection():
     return psycopg2.connect(
-        host=DB_HOST, database=DB_NAME, user=DB_USER, password=DB_PASS
+        host=DB_HOST,
+        database=DB_NAME,
+        user=DB_USER,
+        password=DB_PASS,
+        sslmode=DB_SSLMODE
     )
 
 def init_db():
