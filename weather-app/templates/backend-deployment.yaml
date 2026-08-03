@@ -32,10 +32,16 @@ spec:
             - name: DB_USER
               value: "{{ .Values.env.dbUser }}"
             - name: DB_PASS
-              value: "{{ .Values.env.dbPass }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.env.dbPassSecretName }}
+                  key: {{ .Values.env.dbPassSecretKey }}
             - name: DB_NAME
               value: "{{ .Values.env.dbName }}"
             - name: DB_SSLMODE
               value: "{{ .Values.env.dbSslMode }}"
             - name: OPENWEATHER_API_KEY
-              value: "{{ .Values.env.openweatherApiKey }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.env.openweatherApiKeySecretName }}
+                  key: {{ .Values.env.openweatherApiKeySecretKey }}

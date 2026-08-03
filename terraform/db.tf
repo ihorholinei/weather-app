@@ -48,7 +48,7 @@ resource "aws_db_instance" "postgres" {
   instance_class         = "db.t4g.micro"
   db_name                = "weather_db"
   username               = "postgres"
-  password               = "weatherpass123"
+  password               = var.db_password
   db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
   vpc_security_group_ids = [aws_security_group.db_sg.id]
   skip_final_snapshot    = true
