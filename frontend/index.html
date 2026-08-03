@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather API</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <div class="card">
+      <h1>Погода</h1>
+      <p class="subtitle">Введіть назву міста</p>
+
+      <div class="search-row">
+        <input
+          type="text"
+          id="city-input"
+          placeholder="Наприклад: Kyiv"
+          autocomplete="off"
+        />
+        <button id="search-btn">
+          <span id="btn-text">Дізнатись</span>
+          <span id="btn-spinner" class="spinner hidden"></span>
+        </button>
+      </div>
+
+      <div id="error" class="error hidden"></div>
+
+      <div id="result" class="result hidden">
+        <div class="result-icon" id="result-icon">☀️</div>
+        <div class="result-temp" id="result-temp">--°C</div>
+        <div class="result-city" id="result-city">—</div>
+        <div class="result-desc" id="result-desc">—</div>
+
+        <div class="result-details">
+          <div class="detail">
+            <span class="detail-label">Відчувається</span>
+            <span class="detail-value" id="result-feels">--°C</span>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Вологість</span>
+            <span class="detail-value" id="result-humidity">--%</span>
+          </div>
+          <div class="detail">
+            <span class="detail-label">Вітер</span>
+            <span class="detail-value" id="result-wind">-- м/с</span>
+          </div>
+        </div>
+      </div>
+
+      <button id="history-btn" class="history-btn">Історія запитів</button>
+      <div id="history" class="history hidden"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

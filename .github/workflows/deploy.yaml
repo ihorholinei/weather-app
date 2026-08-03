@@ -22,21 +22,44 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, tag, and push image to Amazon ECR
+      # -------------------------------------------------------------
+      # 1. Збірка та пуш Backend (FastAPI)
+      # -------------------------------------------------------------
+      - name: Build, tag, and push Backend image to ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: weather-app-web
+          ECR_REPOSITORY: weather-app-backend
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -f app/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -f app/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./app
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+      # -------------------------------------------------------------
+      # 2. Збірка та пуш Frontend (Nginx)
+      # -------------------------------------------------------------
+      - name: Build, tag, and push Frontend image to ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: weather-app-frontend
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f frontend/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./frontend
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      # -------------------------------------------------------------
+      # 3. Підключення до EKS
+      # -------------------------------------------------------------
       - name: Update kubeconfig for EKS
         run: |
           aws eks update-kubeconfig --name weather-app-eks --region eu-central-1
 
+      # -------------------------------------------------------------
+      # 4. Деплой через Helm
+      # -------------------------------------------------------------
       - name: Deploy Helm Chart
         run: |
           helm upgrade --install weather-app ./weather-app \
-            --set image.repository=${{ steps.login-ecr.outputs.registry }}/weather-app-web \
-            --set image.tag=${{ github.sha }}
+            --set backend.image.repository=${{ steps.login-ecr.outputs.registry }}/weather-app-backend \
+            --set backend.image.tag=${{ github.sha }} \
+            --set frontend.image.repository=${{ steps.login-ecr.outputs.registry }}/weather-app-frontend \
+            --set frontend.image.tag=${{ github.sha }}

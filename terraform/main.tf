@@ -6,25 +6,23 @@ terraform {
       version = "~> 5.0"
     }
   }
+
+  backend "s3" {
+    bucket         = "y-weather-app-tf-state"
+    key            = "weather-app/terraform.tfstate"
+    region         = "eu-central-1"
+    encrypt        = true
+    dynamodb_table = "weather-app-tf-locks"
+  }
 }
 
 provider "aws" {
   region = var.aws_region
 }
 
-terraform {
-  backend "s3" {
-    bucket         = "y-weather-app-tf-state" # Впиши свою унікальну назву
-    key            = "weather-app/terraform.tfstate"
-    region         = "eu-central-1"
-    encrypt        = true
-    dynamodb_table = "weather-app-tf-locks" # Таблиця для блокування стейту
-  }
-}
-
-
-resource "aws_ecr_repository" "weather_app" {
-  name                 = "weather-app-web"
+# 1. ECR для Backend (FastAPI)
+resource "aws_ecr_repository" "backend" {
+  name                 = "weather-app-backend"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -37,7 +35,28 @@ resource "aws_ecr_repository" "weather_app" {
   }
 }
 
-output "ecr_repository_url" {
-  description = "URL нашого ECR репозиторію"
-  value       = aws_ecr_repository.weather_app.repository_url
+# 2. ECR для Frontend (Nginx)
+resource "aws_ecr_repository" "frontend" {
+  name                 = "weather-app-frontend"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  tags = {
+    Environment = "production"
+    Project     = "weather-app"
+  }
+}
+
+# Outputs
+output "backend_ecr_url" {
+  description = "URL ECR репозиторію для бэкенду"
+  value       = aws_ecr_repository.backend.repository_url
+}
+
+output "frontend_ecr_url" {
+  description = "URL ECR репозиторію для фронтенду"
+  value       = aws_ecr_repository.frontend.repository_url
 }
