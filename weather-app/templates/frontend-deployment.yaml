@@ -6,6 +6,8 @@ metadata:
     app: weather-frontend
 spec:
   replicas: {{ .Values.frontend.replicaCount }}
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: weather-frontend
