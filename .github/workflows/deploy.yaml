@@ -31,7 +31,7 @@ jobs:
           ECR_REPOSITORY: weather-app-backend
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -f app/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./app
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./app
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       # -------------------------------------------------------------
