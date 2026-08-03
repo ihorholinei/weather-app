@@ -30,3 +30,8 @@ frontend:
 env:
   redisHost: "weather-app-redis.k1hgle.0001.euc1.cache.amazonaws.com"
   dbHost: "weather-app-db.cpmymwigkxpx.eu-central-1.rds.amazonaws.com"
+  dbPort: "5432"
+  dbUser: "postgres"
+  dbPassword: "weatherpass123"
+  dbName: "weather_db"
+  dbSslMode: "require"

@@ -27,3 +27,13 @@ spec:
               value: "{{ .Values.env.redisHost }}"
             - name: DB_HOST
               value: "{{ .Values.env.dbHost }}"
+            - name: DB_PORT
+              value: "{{ .Values.env.dbPort }}"
+            - name: DB_USER
+              value: "{{ .Values.env.dbUser }}"
+            - name: DB_PASSWORD
+              value: "{{ .Values.env.dbPassword }}"
+            - name: DB_NAME
+              value: "{{ .Values.env.dbName }}"
+            - name: DB_SSLMODE
+              value: "{{ .Values.env.dbSslMode }}"
