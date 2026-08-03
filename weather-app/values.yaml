@@ -28,5 +28,5 @@ frontend:
 # Application Environment Variables
 # ==========================================
 env:
-  redisHost: "redis-service"
-  dbHost: "postgres-service"
+  redisHost: "weather-app-redis.k1hgle.0001.euc1.cache.amazonaws.com"
+  dbHost: "weather-app-db.cpmymwigkxpx.eu-central-1.rds.amazonaws.com"

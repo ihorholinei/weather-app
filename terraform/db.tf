@@ -44,15 +44,15 @@ resource "aws_db_instance" "postgres" {
   allocated_storage      = 20
   max_allocated_storage  = 100
   engine                 = "postgres"
-  engine_version         = "15"
+  engine_version         = "15" # Залиш просто "15"
   instance_class         = "db.t4g.micro"
   db_name                = "weather_db"
   username               = "postgres"
-  password               = "weatherpass123" # На проді ховаємо в Secrets Manager/variables
+  password               = "weatherpass123"
   db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
   vpc_security_group_ids = [aws_security_group.db_sg.id]
   skip_final_snapshot    = true
-  publicly_accessible    = true # Для зручного тестового підключення
+  publicly_accessible    = true
 
   tags = {
     Name = "weather-app-postgres"
@@ -67,6 +67,7 @@ resource "aws_elasticache_subnet_group" "redis_subnet_group" {
 resource "aws_elasticache_cluster" "redis" {
   cluster_id           = "weather-app-redis"
   engine               = "redis"
+  engine_version       = "7.0" # Обов'язково вказуємо версію під default.redis7
   node_type            = "cache.t4g.micro"
   num_cache_nodes      = 1
   parameter_group_name = "default.redis7"
@@ -77,4 +78,12 @@ resource "aws_elasticache_cluster" "redis" {
   tags = {
     Name = "weather-app-redis"
   }
+}
+
+output "rds_endpoint" {
+  value = aws_db_instance.postgres.address
+}
+
+output "redis_endpoint" {
+  value = aws_elasticache_cluster.redis.cache_nodes[0].address
 }
