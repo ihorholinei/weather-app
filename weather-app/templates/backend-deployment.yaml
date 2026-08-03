@@ -6,6 +6,8 @@ metadata:
     app: weather-backend
 spec:
   replicas: {{ .Values.backend.replicaCount }}
+  strategy:
+    type: recreate
   selector:
     matchLabels:
       app: weather-backend
